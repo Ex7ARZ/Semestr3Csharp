@@ -2,7 +2,8 @@
 
   "pathes": {
     "Source1": "D:\\csharp\\Source1",
-    "Target1": "D:\\csharp\\Target1"
+    "Target1": "D:\\csharp\\Target1",
+    "ArchFolder": "Archive" 
   },
     "archivizeOptions": {
       "Cryptextension": ".crypt"

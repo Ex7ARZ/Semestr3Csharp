@@ -3,6 +3,7 @@
   <pathes>
     <Source1>D:\csharp\Source1</Source1>
     <Target1>D:\csharp\Target1</Target1>
+    <ArchFolder>Archive</ArchFolder>
   </pathes>
   <archivizeOptions>
     <Cryptextension>.crypt</Cryptextension>

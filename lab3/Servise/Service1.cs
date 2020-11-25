@@ -57,7 +57,7 @@ namespace SerTest
 
             FileSystemWatcher watcher;
 
-            EtlXmlJsonOption options;
+             EtlXmlJsonOption options;
 
             ParsOptions pmanager;
 
@@ -119,12 +119,9 @@ namespace SerTest
             public void RecordEntry(string filePath)
             {
                
-                var cryptstr = options.cryptOptions.Decryptf(filePath);
-                var archstr = options.archivizeOptions.ArchivizeCrypt(cryptstr);
-                var newstr = options.copyOptions.Copystr(archstr, options.pathes.Target1);
-                var newcrypt = options.archivizeOptions.DearchivizeCrypt(newstr);
-                options.cryptOptions.Encryptf(newcrypt);
                 
+                options.Do(filePath);
+
 
             }
         }
