@@ -222,10 +222,6 @@ namespace ClassLibrary2
         {
             object result = Activator.CreateInstance(typeof(T));
 
-            /*if (result is null)
-            {
-                throw new ArgumentNullException($"{nameof(result)} is null");
-            }*/
             try
             {
                 PropertyInfo[] properties = typeof(T).GetProperties();
@@ -234,8 +230,8 @@ namespace ClassLibrary2
                 foreach (PropertyInfo pi in properties)
                 {
 
-                    //Console.WriteLine(FindNode<T>().ToString());
-                    DeserializeRecursive(pi, result, FindNode<T>());
+                    
+                    DeserializeRecursive(pi, result, FindElement<T>());
                 }
             }
             catch (Exception)
@@ -249,7 +245,7 @@ namespace ClassLibrary2
             return (T)result;
         }
 
-        private JsonElement FindNode<T>()
+        private JsonElement FindElement<T>()
         {
             string json;
             using (StreamReader file = File.OpenText(path))
@@ -270,7 +266,7 @@ namespace ClassLibrary2
 
             foreach (PropertyInfo pi in properties)
             {
-                FindNodenotRecursive<T>(pi, doc.RootElement, ref result);
+                FindElementnotRecursive<T>(pi, doc.RootElement, ref result);
             }
 
             JsonElement d = default;
@@ -282,14 +278,14 @@ namespace ClassLibrary2
             return result;
         }
 
-        private void FindNodenotRecursive<T>(PropertyInfo pi, JsonElement parentNode, ref JsonElement result)
+        private void FindElementnotRecursive<T>(PropertyInfo pi, JsonElement parentNode, ref JsonElement result)
         {
             foreach (var node in parentNode.EnumerateObject())
             {
                 JsonElement doc = default;
                 if (node.Name == pi.Name && pi.PropertyType == typeof(T) && result.Equals(doc))
                 {
-                    //Console.WriteLine($"FOUND");
+                   
                     result = node.Value;
 
 
@@ -305,7 +301,7 @@ namespace ClassLibrary2
                 {
                     if (pi.PropertyType == typeof(string))
                     {
-                        // Console.WriteLine($"{  pi.PropertyType}");
+                        
 
                         pi.SetValue(parent, Convert.ChangeType(node.Value.ToString(), pi.PropertyType));
                     }
@@ -326,10 +322,10 @@ namespace ClassLibrary2
 
                         pi.SetValue(parent, subObj);
 
-                        PropertyInfo[] subPIs = subType.GetProperties();
-                        foreach (PropertyInfo spi in subPIs)
+                        PropertyInfo[] props = subType.GetProperties();
+                        foreach (PropertyInfo ppi in props)
                         {
-                            DeserializeRecursive(spi, subObj, node.Value);
+                            DeserializeRecursive(ppi, subObj, node.Value);
                         }
                     }
                 }
@@ -343,22 +339,18 @@ namespace ClassLibrary2
     {
         private string path;
 
-        private Type mainType;
+        private Type ttype;
 
-        public XmlParser(string path, Type mainType)
+        public XmlParser(string path, Type ttype)
         {
             this.path = path;
-            this.mainType = mainType;
+            this.ttype = ttype;
         }
 
         public T GetOptions<T>()
         {
             object result = Activator.CreateInstance(typeof(T));
 
-            /* if (result is null)
-             {
-                 throw new ArgumentNullException($"{nameof(result)} is null");
-             }*/
 
             try
             {
@@ -416,18 +408,18 @@ namespace ClassLibrary2
 
             doc.Load(path);
 
-            if (typeof(T) == mainType)
+            if (typeof(T) == ttype)
             {
                 return doc.DocumentElement;
             }
 
-            PropertyInfo[] properties = mainType.GetProperties();
+            PropertyInfo[] properties = ttype.GetProperties();
 
             XmlNode result = null;
 
-            foreach (PropertyInfo pi in properties)
+            foreach (PropertyInfo ppi in properties)
             {
-                FindNodeRecursive<T>(pi, doc.DocumentElement, ref result);
+                FindNodeRecursive<T>(ppi, doc.DocumentElement, ref result);
             }
 
             if (result is null)
@@ -448,12 +440,12 @@ namespace ClassLibrary2
 
                     if (!pi.PropertyType.IsPrimitive && !(pi.PropertyType == typeof(string)))
                     {
-                        Type subType = pi.PropertyType;
+                        Type subt = pi.PropertyType;
 
-                        PropertyInfo[] subPIs = subType.GetProperties();
-                        foreach (PropertyInfo spi in subPIs)
+                        PropertyInfo[] props = subt.GetProperties();
+                        foreach (PropertyInfo ppi in props)
                         {
-                            FindNodeRecursive<T>(spi, node, ref result);
+                            FindNodeRecursive<T>(ppi, node, ref result);
                         }
                     }
                 }
