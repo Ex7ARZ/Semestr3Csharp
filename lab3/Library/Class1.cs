@@ -154,12 +154,7 @@ namespace ClassLibrary2
             var name = stpath.Substring(i);
             var newpath = Path.Combine(folder, name);
 
-            DirectoryInfo dirInfo = new DirectoryInfo(pathes.Target1);
-            if (!dirInfo.Exists)
-            {
-                dirInfo.Create();
-            }
-            dirInfo.CreateSubdirectory(folder);
+           
 
             using (FileStream sourceStream = new FileStream(getstr, FileMode.Open))
             {
