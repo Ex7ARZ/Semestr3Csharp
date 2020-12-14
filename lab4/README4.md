@@ -1,3 +1,2 @@
-4 лаба 
-обращаться в telegram(доступен 24/7):
+4 лаба  в telegram:
 @ScaryHowl
